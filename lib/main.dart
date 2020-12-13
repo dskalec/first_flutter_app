@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quizz.dart';
+import './result.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -20,6 +20,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // _ turns it into a private class
   var _currentQuestion = 0;
+  final _questions = const [
+    // in Dart this is called a Map, not a dictionary
+    {
+      'questionText': 'What\'s your favourite colour?',
+      'answers': ['Black', 'White', 'Red', 'None of the above'],
+    },
+    {
+      'questionText': 'What\'s your favourite animal?',
+      'answers': ['Cat', 'Dog', 'Parrot', 'None of the above'],
+    },
+    {
+      'questionText': 'What\'s your favourite music band?',
+      'answers': ['Nickelback', 'Daughtry', 'PoTF', 'None of the above'],
+    },
+  ];
+
   void answerQuestion() {
     setState(() {
       _currentQuestion++;
@@ -32,36 +48,18 @@ class _MyAppState extends State<MyApp> {
   @override // makes the code cleaner -> makes it clear that we're overriding it
   Widget build(BuildContext context) {
     // MaterialApp is of type Widget (extends StatefulWidget)
-    const questions = [
-      // in Dart this is called a Map, not a dictionary
-      {
-        'questionText': 'What\'s your favourite colour?',
-        'answers': ['Black', 'White', 'Red', 'None of the above'],
-      },
-      {
-        'questionText': 'What\'s your favourite animal?',
-        'answers': ['Cat', 'Dog', 'Parrot', 'None of the above'],
-      },
-      {
-        'questionText': 'What\'s your favourite music band?',
-        'answers': ['Nickelback', 'Daughtry', 'PoTF', 'None of the above'],
-      },
-    ];
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('My first app'),
         ),
-        body: Column(
-          children: <Widget>[
-            Question(questions[_currentQuestion]['questionText']),
-            ...(questions[_currentQuestion]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(answerQuestion, answer);
-            }).toList(),
-          ],
-        ), // <Widget> specifies type of list items, moze i bez tog
+        body: _currentQuestion < _questions.length
+            ? Quizz(
+                answerQuestion: answerQuestion,
+                questions: _questions,
+                currentQuestion: _currentQuestion)
+            : Result(), // <Widget> specifies type of list items, moze i bez tog
       ),
     );
   }
